@@ -1,0 +1,114 @@
+ h2 {
+color: #2E8B57;
+font-family: 'Arial', sans-serif; 
+text-align: center;
+border-bottom: 2px solid #2E8B57;
+padding-bottom: 10px;
+}
+
+ h3 {
+color: #4682B4;
+font-family: 'Verdana', sans-serif;
+text-align: left;
+margin-left: 20px;
+}
+
+ hr {
+border: 1px solid #B22222; 
+width: 80%;
+margin: 20px auto;
+}
+
+p {
+font-size: 16px; 
+line-height: 1.5;
+margin: 10px 20px;
+color: #333333;
+}
+
+ div {
+background-color: #F5F5F5;
+padding: 20px;
+border: 1px solid #DCDCDC; 
+margin-bottom: 20px;
+}
+
+ span {
+color: #FF4500;
+font-weight: bold;
+font-style: italic;
+}
+
+ time {
+font-size: 14px; 
+color: #696969;
+}
+
+ img {
+border: 2px solid #708090;
+border-radius: 8px;
+max-width: 100%;
+height: auto;
+}
+
+a {
+color: #1E90FF;
+text-decoration: none;
+font-weight: bold;
+}
+
+a:hover {
+
+color: #FF4500;
+text-decoration: underline;
+}
+
+/* CSS Selectors */
+
+* {
+box-sizing: border-box;
+}
+
+.highlight {
+background-color: #FFFFE0;
+padding: 5px;
+border-radius: 3px;
+}
+
+ #special-section {
+background-color: #FFFACD;
+padding: 15px;
+border: 2px solid #FFD700;
+}
+
+ h2, h3, p {
+margin: 10px;
+font-family: 'Georgia', serif;
+}
+
+ div p {
+color: #4B0082;
+}
+
+ div > p {
+font-weight: bold;
+}
+
+ h2 + p {
+color: #8B0000;
+font-style: italic;
+}
+
+ a[target="_blank"] {
+color: #8A2BE2;
+}
+
+ p:first-child {
+color: #20B2AA;
+}
+
+ p::before {
+content: "Note: "; 
+color: #FF4500;
+font-weight: bold;
+}
