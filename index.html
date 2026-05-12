@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Digital Notice Board — BGS College of Engineering and Technology</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body data-theme="dark">
+  <!-- Skip Link for Accessibility -->
+  <a class="visually-hidden focusable" href="#notices" aria-label="Skip to notices">Skip to notices</a>
+
+  <!-- Banner -->
+  <div class="banner" role="banner">
+    <img src="assets/bgslogo.jpg" alt="BGS College Logo" class="banner-logo">
+  </div>
+
+  <!-- LOGIN SECTION -->
+  <div id="loginSection" class="login-shell" role="region" aria-label="Login section">
+    <div class="login-card">
+      <h2>BGS College of Engineering and Technology</h2>
+      <h3>Digital Notice Board</h3>
+      <form id="loginForm" class="login-form">
+        <label>Username
+          <input id="username" placeholder="Enter your username" required autocomplete="username">
+        </label>
+        <label>Password
+          <input id="password" type="password" placeholder="Enter your password" required autocomplete="current-password">
+        </label>
+        <label>Role
+          <select id="role-select" aria-label="Login role">
+            <option value="admin">Administrator</option>
+            <option value="student">Student (View Only)</option>
+          </select>
+        </label>
+        <button type="submit" class="btn">Sign In</button>
+      </form>
+      <p id="loginError" class="error"></p>
+      <p class="small">Demo Admin: <strong>admin</strong> / <strong>1234</strong> &nbsp;•&nbsp; Student: <strong>student</strong> / <strong>1111</strong></p>
+    </div>
+  </div>
+
+  <!-- MAIN APP (hidden until login) -->
+  <div id="appSection" class="app-shell" style="display:none;" role="application" aria-hidden="true">
+    <header class="site-header" role="banner">
+      <div class="brand">
+        <div class="college-text">
+          <h1>BGS College of Engineering and Technology</h1>
+          <p class="tag">Digital Notice Board</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Notification Bell -->
+        <div style="position: relative;">
+          <button id="notification-bell" class="notification-bell" title="Notifications" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+            </svg>
+            <span id="notification-badge" class="notification-badge" style="display: none;">0</span>
+          </button>
+          <div id="notification-dropdown" class="notification-dropdown" role="menu" aria-label="Notifications">
+            <div class="notification-dropdown-header">
+              <h4>Notifications</h4>
+              <button id="mark-all-read" aria-label="Mark all as read">Mark all read</button>
+            </div>
+            <div id="notification-list" class="notification-list">
+              <div class="notification-empty">No new notifications</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-switch" role="group" aria-label="Theme toggle">
+          <label class="switch">
+            <input id="theme-toggle" type="checkbox" aria-label="Toggle light theme" />
+            <span class="slider" aria-hidden="true"></span>
+          </label>
+        </div>
+
+        <button id="help-btn" class="ghost" title="Keyboard Shortcuts" aria-haspopup="true" aria-controls="shortcuts-modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+          </svg>
+          Help
+        </button>
+
+        <button id="logoutBtn" class="ghost">Logout</button>
+      </div>
+    </header>
+
+    <!-- Ticker -->
+    <section class="ticker" aria-live="polite">
+      <div id="ticker-inner" class="ticker-inner">No urgent notices at the moment.</div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs" role="navigation" aria-label="Notice categories">
+      <button class="tab active" data-type="all">All <span class="count" id="count-all">0</span></button>
+      <button class="tab" data-type="Circular">Circulars <span class="count" id="count-circular">0</span></button>
+      <button class="tab" data-type="Event">Events <span class="count" id="count-event">0</span></button>
+      <button class="tab" data-type="Urgent">Urgent <span class="count" id="count-urgent">0</span></button>
+      <button class="tab" data-type="Stats" id="stats-tab">📊 Statistics</button>
+    </nav>
+
+    <!-- Statistics Dashboard -->
+    <div id="stats-section" class="stats-container" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Total Notices</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-urgent">0</div>
+        <div class="stat-label">Urgent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-events">0</div>
+        <div class="stat-label">Events</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-circular">0</div>
+        <div class="stat-label">Circulars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-pinned">0</div>
+        <div class="stat-label">Pinned</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="stat-expired">0</div>
+        <div class="stat-label">Expired</div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container" role="main" id="main-content">
+      <!-- Left Panel - Notices -->
+      <aside class="left" role="region" aria-label="Notices list">
+        <div class="controls">
+          <input id="search" placeholder="Search notices by title, description..." aria-label="Search notices">
+          <select id="sort-by" class="sort-select" aria-label="Sort notices">
+            <option value="date">Sort by Date</option>
+            <option value="title">Sort by Title</option>
+            <option value="type">Sort by Type</option>
+          </select>
+          <button id="bulk-select-btn" class="ghost admin-only">📋 Select</button>
+          <button id="clear-filters" class="ghost">Clear</button>
+        </div>
+
+        <div id="bulk-actions" class="bulk-actions admin-only">
+          <span id="bulk-count">0 selected</span>
+          <button id="bulk-delete" class="danger small-btn">Delete</button>
+          <button id="bulk-pin" class="ghost small-btn">Pin</button>
+          <button id="bulk-cancel" class="ghost small-btn">Cancel</button>
+        </div>
+
+        <div id="notices" class="notices-grid" aria-live="polite" aria-atomic="false"></div>
+      </aside>
+
+      <!-- Right Panel - Admin Form -->
+      <aside class="right admin-only" id="admin-panel" aria-hidden="false" role="region" aria-label="Admin panel">
+        <h2>➕ Add / Edit Notice</h2>
+        <form id="notice-form">
+          <input type="hidden" id="notice-id" />
+
+          <label>Title
+            <input id="title" required placeholder="Enter notice title">
+          </label>
+
+          <label>Type
+            <select id="type">
+              <option value="Circular">Circular</option>
+              <option value="Event">Event</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </label>
+
+          <label>Event/Notice Date
+            <input id="notice-date" type="date">
+          </label>
+
+          <label>Expiry Date (optional)
+            <input id="expiry-date" type="date">
+          </label>
+
+          <label>Description
+            <textarea id="description" rows="4" required placeholder="Enter detailed description..."></textarea>
+          </label>
+
+          <label>Upload Image (optional)
+            <input id="image-upload" type="file" accept="image/*">
+            <span class="file-info">Supported: JPG, PNG, GIF</span>
+          </label>
+
+          <label>Attach File - PDF/Document (optional)
+            <input id="file-attach" type="file" accept=".pdf,.doc,.docx,.txt">
+            <span class="file-info">Max file size: 10MB</span>
+          </label>
+
+          <div class="form-row">
+            <button type="submit" class="btn">Save Notice</button>
+            <button type="button" id="cancel-edit" class="ghost">Cancel</button>
+          </div>
+        </form>
+
+        <hr />
+
+        <h3>⚙️ Manage</h3>
+        <div class="manage-row">
+          <button id="export-json" class="ghost">📤 Export JSON</button>
+          <label for="import-file" class="ghost">📥 Import</label>
+          <input id="import-file" type="file" accept="application/json">
+          <button id="clear-all" class="danger">🗑️ Clear All</button>
+        </div>
+
+        <p class="small">💡 Tip: Replace <code>assets/bgslogo.jpg</code> with your college logo.</p>
+      </aside>
+    </main>
+
+    <!-- Floating Add Button (Mobile/Quick Access) -->
+    <button id="floating-add" class="floating-add admin-only" title="Add new notice" aria-label="Add new notice">
+      <span>+</span>
+    </button>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <div>
+          <strong>BGS College of Engineering and Technology</strong><br>
+          📧 info@bgscet.edu &nbsp;•&nbsp; 📞 +91-XXXXXXXXXX
+        </div>
+        <div class="socials">
+          <small>Mini Project • © <span id="year"></span> BGS CET</small>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div id="shortcuts-modal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title">⌨️ Keyboard Shortcuts</h3>
+        <button class="modal-close" id="close-modal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-item">
+          <kbd>Ctrl + F</kbd>
+          <span>Focus search</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Ctrl + N</kbd>
+          <span>New notice (focus form)</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Ctrl + B</kbd>
+          <span>Toggle bulk select</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Ctrl + S</kbd>
+          <span>Save notice</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Ctrl + 1-4</kbd>
+          <span>Switch tabs</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Esc</kbd>
+          <span>Cancel / Close</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>?</kbd>
+          <span>Show this help</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
